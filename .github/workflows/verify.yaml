@@ -78,6 +78,8 @@ jobs:
       - name: Verify module schema
         run: |
           npm i -g ajv-cli
+          echo "Verifying metadata:"
+          cat ${{ env.DIST_DIR }}/index.yaml
           curl -LsO https://modules.cloudnativetoolkit.dev/schemas/module.json
           ajv test -s module.json -d ${{ env.DIST_DIR }}/index.yaml --valid
 
