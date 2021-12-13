@@ -10,7 +10,7 @@ SERVER_NAME="default"
 TYPE="base"
 LAYER="2-services"
 
-COMPONENT_NAME="my-module"
+COMPONENT_NAME="certmgr"
 
 mkdir -p .testrepo
 
@@ -65,7 +65,16 @@ if [[ $count -eq 20 ]]; then
   exit 1
 fi
 
-kubectl rollout status "deployment/${DEPLOYMENT}" -n "${NAMESPACE}" || exit 1
+#kubectl rollout status "deployment/${DEPLOYMENT}" -n "${NAMESPACE}" || exit 1
+
+#sleep 4m
+
+kubectl rollout status deployment/${NAMESPACE} -n ${NAMESPACE} || exit 1
+#if [[ $? -ne 0 ]]; then
+#    echo "certmgr deployment failed with exit code $? in namespace cert-manager"
+#    exit 1
+#fi
+
 
 cd ..
 rm -rf .testrepo
