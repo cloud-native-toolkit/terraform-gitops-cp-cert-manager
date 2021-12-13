@@ -13,7 +13,7 @@ NAMESPACE="$2"
 
 mkdir -p "${DEST_DIR}"
 
-mv ${CHART_DIR}/certmgr-template.yaml ${DEST_DIR}/certmgr.yaml
+#mv ${CHART_DIR}/certmgr-template.yaml ${DEST_DIR}/certmgr.yaml
 
 sed -e "s/{{NAMESP}}/${NAMESPACE}/g" \
-    ${DEST_DIR}/certmgr.yaml > ${DEST_DIR}/certmgr.yaml
+    ${CHART_DIR}/certmgr-template.yaml > ${DEST_DIR}/certmgr.yaml

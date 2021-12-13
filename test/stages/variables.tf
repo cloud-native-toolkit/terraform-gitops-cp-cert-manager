@@ -68,7 +68,7 @@ variable "git_org" {
 }
 
 variable "git_repo" {
-  default = "git-module-test"
+  default = "git-module-certmgr"
 }
 
 variable "gitops_namespace" {
