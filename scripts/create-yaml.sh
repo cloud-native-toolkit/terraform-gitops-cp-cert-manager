@@ -1,11 +1,19 @@
 #!/usr/bin/env bash
 
 SCRIPT_DIR=$(cd $(dirname "$0"); pwd -P)
-MODULE_DIR=$(cd "${SCRIPT_DIR}/.."; pwd -P)
+#MODULE_DIR=$(cd "${SCRIPT_DIR}/.."; pwd -P)
+CHART_DIR=$(cd "${SCRIPT_DIR}/../chart"; pwd -P)
 
-NAME="$1"
-DEST_DIR="$2"
+DEST_DIR="$1"
+NAMESPACE="$2"
 
 ## Add logic here to put the yaml resource content in DEST_DIR
 
-find "${DEST_DIR}" -name "*"
+#find "${DEST_DIR}" -name "*"
+
+mkdir -p "${DEST_DIR}"
+
+mv ${CHART_DIR}/certmgr-template.yaml ${DEST_DIR}/certmgr.yaml
+
+sed -e "{{NAMESP}}|${NAMESPACE}|g" ${DEST_DIR}/certmgr.yaml > ${DEST_DIR}/certmgr.yaml
+

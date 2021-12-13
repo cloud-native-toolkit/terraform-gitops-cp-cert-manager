@@ -1,6 +1,6 @@
-name: ""
+name: Cert-Manager
 type: terraform
-description: ""
+description: "Module to install JetStack Cert-Manager via Gitops"
 tags:
   - tools
   - gitops
