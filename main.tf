@@ -2,11 +2,11 @@ locals {
   name          = "certmgr"
   bin_dir       = module.setup_clis.bin_dir
   yaml_dir      = "${path.cwd}/.tmp/${local.name}/chart/${local.name}"
-  ingress_host  = "${local.name}-${var.namespace}.${var.cluster_ingress_hostname}"
+  //ingress_host  = "${local.name}-${var.namespace}.${var.cluster_ingress_hostname}"
   //ingress_url   = "https://${local.ingress_host}"
   //service_url   = "http://${local.name}.${var.namespace}"
-  values_content = {
-  }
+  //values_content = {
+  //}
   layer = "services"
   application_branch = "main"
   layer_config = var.gitops_config[local.layer]
@@ -21,7 +21,7 @@ resource null_resource create_yaml {
     command = "${path.module}/scripts/create-yaml.sh '${local.yaml_dir}' '${var.namespace}'"
 
     environment = {
-      VALUES_CONTENT = yamlencode(local.values_content)
+      BIN_DIR = local.bin_dir
     }
   }
 }
