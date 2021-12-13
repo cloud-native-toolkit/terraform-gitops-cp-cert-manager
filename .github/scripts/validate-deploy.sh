@@ -51,23 +51,35 @@ else
   sleep 30
 fi
 
-DEPLOYMENT="${COMPONENT_NAME}-${BRANCH}"
+#DEPLOYMENT="${COMPONENT_NAME}-${BRANCH}"
+#count=0
+#until kubectl get deployment "${DEPLOYMENT}" -n "${NAMESPACE}" || [[ $count -eq 20 ]]; do
+#  echo "Waiting for deployment/${DEPLOYMENT} in ${NAMESPACE}"
+#  count=$((count + 1))
+#  sleep 15
+#done
+#
+#if [[ $count -eq 20 ]]; then
+#  echo "Timed out waiting for deployment/${DEPLOYMENT} in ${NAMESPACE}"
+#  kubectl get all -n "${NAMESPACE}"
+#  exit 1
+#fi
+
+#kubectl rollout status "deployment/${DEPLOYMENT}" -n "${NAMESPACE}" || exit 1
+
+#sleep 4m
+
 count=0
-until kubectl get deployment "${DEPLOYMENT}" -n "${NAMESPACE}" || [[ $count -eq 20 ]]; do
-  echo "Waiting for deployment/${DEPLOYMENT} in ${NAMESPACE}"
+until kubectl rollout status deployment/${NAMESPACE} -n ${NAMESPACE}|| [[ $count -eq 20 ]]; do
+  echo "Waiting for CertManager in namespace: ${NAMESPACE} to deploy"
   count=$((count + 1))
   sleep 15
 done
 
 if [[ $count -eq 20 ]]; then
-  echo "Timed out waiting for deployment/${DEPLOYMENT} in ${NAMESPACE}"
-  kubectl get all -n "${NAMESPACE}"
+  echo "Timed out waiting for CertManager in namespace: ${NAMESPACE} to deploy"
   exit 1
 fi
-
-#kubectl rollout status "deployment/${DEPLOYMENT}" -n "${NAMESPACE}" || exit 1
-
-#sleep 4m
 
 kubectl rollout status deployment/${NAMESPACE} -n ${NAMESPACE} || exit 1
 #if [[ $? -ne 0 ]]; then
