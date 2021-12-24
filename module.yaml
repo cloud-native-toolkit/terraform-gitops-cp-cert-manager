@@ -1,8 +1,10 @@
-name: Cert-Manager
-type: terraform
-description: "Module to install JetStack Cert-Manager via Gitops"
+name: gitops-cert-manager-jetstack
+softwareProvider: jetstack
+type: gitops
+description: Module to populate a gitops repository with the resources to deploy the JetStack Cert Manager
 tags:
-  - tools
+  - cert manager
+  - jetstack
   - gitops
 versions:
   - platforms:
