@@ -92,7 +92,3 @@ variable "server_name" {
   default     = "default"
 }
 
-variable "namespace" {
-  type        = string
-  description = "The namespace where cert-manager is deployed"
-}

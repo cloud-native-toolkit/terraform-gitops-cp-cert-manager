@@ -1,8 +1,10 @@
-name: Cert-Manager
-type: terraform
-description: "Module to install JetStack Cert-Manager via Gitops"
+name: gitops-cert-manager-jetstack
+softwareProvider: jetstack
+type: gitops
+description: Module to populate a gitops repository with the resources to deploy the JetStack Cert Manager
 tags:
-  - tools
+  - cert manager
+  - jetstack
   - gitops
 versions:
   - platforms:
@@ -22,10 +24,6 @@ versions:
             version: ">= 1.0.0"
           - source: github.com/ibm-garage-cloud/terraform-k8s-ocp-cluster
             version: ">= 2.0.0"
-      - id: namespace
-        refs:
-          - source: github.com/cloud-native-toolkit/terraform-gitops-namespace.git
-            version: ">= 1.0.0"
     variables:
       - name: gitops_config
         moduleRef:
@@ -51,10 +49,6 @@ versions:
         moduleRef:
           id: cluster
           output: platform.tls_secret
-      - name: namespace
-        moduleRef:
-          id: namespace
-          output: name
       - name: kubeseal_cert
         moduleRef:
           id: gitops
