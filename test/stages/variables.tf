@@ -15,11 +15,6 @@ variable "region" {
   description = "Region for VLANs defined in private_vlan_number and public_vlan_number."
 }
 
-variable "namespace" {
-  type        = string
-  description = "Namespace for tools"
-}
-
 variable "cluster_name" {
   type        = string
   description = "The name of the cluster"
@@ -35,6 +30,11 @@ variable "cluster_exists" {
   type        = string
   description = "Flag indicating if the cluster already exists (true or false)"
   default     = "true"
+}
+
+variable "bootstrap_prefix" {
+  type = string
+  default = ""
 }
 
 variable "name_prefix" {
