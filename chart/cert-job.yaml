@@ -14,19 +14,25 @@ spec:
               export HOME=/tmp/approver
               echo "Approving operator install.  Waiting a few seconds to make sure the InstallPlan gets created first."
               sleep $SLEEP
-              for subscription in `oc get subscriptions.operators.coreos.com -o jsonpath='{.items[*].metadata.name}'`
-              do
-                echo "Processing subscription '$subscription'"
-                installplan=$(oc get subscriptions.operators.coreos.com --field-selector metadata.name=${subscription} -o jsonpath='{.items[0].status.installPlanRef.name}')
-                echo "Check installplan approved status"
-                oc get installplan $installplan -o jsonpath="{.spec.approved}"
-                if [ "`oc get installplan $installplan -o jsonpath="{.spec.approved}"`" == "false" ]; then
-                  echo "Approving Subscription $subscription with install plan $installplan"
-                  oc patch installplan $installplan --type=json -p='[{"op":"replace","path": "/spec/approved", "value": true}]'
-                else
-                  echo "Install Plan '$installplan' already approved"
-                fi
-              done
+              installplan=$(oc get installplan -n openshift-operators | grep -i cert-manager.v1.5.4 | awk '{print $1}'); echo "installplan: $installplan"
+              
+              count=0
+
+              if [ "$installplan" != "" ]
+                echo "patching install plan: $installplan"
+                oc patch installplan ${installplan} -n openshift-operators --type merge --patch '{"spec":{"approved":true}}'
+
+                until [[ oc get installplan $installplan -o jsonpath="{.spec.approved}" -n openshift-operators == "true" ]] || [[ $count -eq 10 ]] do
+                  count=$((count + 1))
+                  sleep 60
+                done
+
+              fi
+
+              if [[ $count -eq 10 ]]; then
+                echo "Timed out waiting for CertManager to installplan to be approved"
+                exit 1
+              fi
           imagePullPolicy: Always
           name: installplan-approver
           env:
