@@ -10,9 +10,13 @@ variable "ibmcloud_api_key" {
   description = "The api key for IBM Cloud access"
 }
 
-variable "region" {
+variable "server_url" {
   type        = string
-  description = "Region for VLANs defined in private_vlan_number and public_vlan_number."
+}
+
+variable "bootstrap_prefix" {
+  type = string
+  default = ""
 }
 
 variable "cluster_name" {
@@ -30,11 +34,6 @@ variable "cluster_exists" {
   type        = string
   description = "Flag indicating if the cluster already exists (true or false)"
   default     = "true"
-}
-
-variable "bootstrap_prefix" {
-  type = string
-  default = ""
 }
 
 variable "name_prefix" {
@@ -68,7 +67,7 @@ variable "git_org" {
 }
 
 variable "git_repo" {
-  default = "git-module-certmgr"
+  default = "git-module-cert-mgr"
 }
 
 variable "gitops_namespace" {
