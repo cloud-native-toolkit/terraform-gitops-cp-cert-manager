@@ -20,7 +20,7 @@ spec:
               
               count=0
 
-              if [ "$installplan" != "" ]
+              if [[ "$installplan" != "" ]]; then
                 echo "patching install plan: $installplan"
                 $(oc patch installplan $installplan -n openshift-operators --type merge --patch '{"spec":{"approved":true}}')
 

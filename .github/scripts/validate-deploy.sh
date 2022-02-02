@@ -43,13 +43,13 @@ sleep 4m
 count=0
 NAMES=$(kubectl get csv cert-manager.v1.5.4 -n openshift-operators -o=jsonpath={.status..requirementStatus..name})
 
-until [[ "${NAMES}" =~ cert-manager.v1.5.4 && "${NAMES}" =~ certificaterequests.cert-manager.io  ]] || [[ $count -eq 10 ]]; do
+until [[ "${NAMES}" =~ cert-manager.v1.5.4 && "${NAMES}" =~ certificaterequests.cert-manager.io  ]] || [[ $count -eq 6 ]]; do
     count=$((count + 1))
     sleep 60
     NAMES=$(kubectl get csv cert-manager.v1.5.4 -n openshift-operators -o=jsonpath={.status..requirementStatus..name})
 done
 
-if [[ $count -eq 10 ]]; then
+if [[ $count -eq 6 ]]; then
   echo "Timed out waiting for CertManager to deploy"
   exit 1
 fi
