@@ -22,9 +22,9 @@ spec:
 
               if [ "$installplan" != "" ]
                 echo "patching install plan: $installplan"
-                oc patch installplan $installplan -n openshift-operators --type merge --patch '{"spec":{"approved":true}}'
+                $(oc patch installplan $installplan -n openshift-operators --type merge --patch '{"spec":{"approved":true}}')
 
-                until [[ oc get installplan $installplan -o jsonpath="{.spec.approved}" -n openshift-operators == "true" ]] || [[ $count -eq 6 ]]; do
+                until [[ $(oc get installplan $installplan -o jsonpath="{.spec.approved}" -n openshift-operators) == "true" ]] || [[ $count -eq 6 ]]; do
                   count=$((count + 1))
                   sleep 60
                 done
