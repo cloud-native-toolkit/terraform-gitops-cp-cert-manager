@@ -34,7 +34,7 @@ if [[ ! -f "payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/cert-manag
 fi
 
 echo "Printing payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/cert-manager.yaml"
-cat "payload/${LAYER}namespace/${NAMESPACE}/${COMPONENT_NAME}/cert-manager.yaml"
+cat "payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/cert-manager.yaml"
 
 #wait for argocd gitops to deploy
 sleep 4m
@@ -43,13 +43,13 @@ sleep 4m
 count=0
 NAMES=$(kubectl get csv cert-manager.v1.5.4 -n openshift-operators -o=jsonpath={.status..requirementStatus..name})
 
-until [[ "${NAMES}" =~ cert-manager.v1.5.4 && "${NAMES}" =~ certificaterequests.cert-manager.io  ]] || [[ $count -eq 6 ]]; do
+until [[ "$NAMES" =~ cert-manager.v1.5.4 && "$NAMES" =~ certificaterequests.cert-manager.io  ]] || [[ $count -eq 4 ]]; do
     count=$((count + 1))
     sleep 60
     NAMES=$(kubectl get csv cert-manager.v1.5.4 -n openshift-operators -o=jsonpath={.status..requirementStatus..name})
 done
 
-if [[ $count -eq 6 ]]; then
+if [[ $count -eq 4 ]]; then
   echo "Timed out waiting for CertManager to deploy"
   exit 1
 fi
