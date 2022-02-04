@@ -5,23 +5,9 @@
 
 Deploys Jetstack cert-manager in RH OpenShift cluster via Gitops.  
 
-***** This module is under development *****
-
 ## Supported platforms
 
 - OCP 4.6+
-
-## Module dependencies
-
-The module uses the following elements
-
-### Terraform providers
-
-- null - used to run the shell scripts
-
-### Environment
-
-- kubectl - used to apply yaml 
 
 ## Suggested companion modules
 
@@ -34,9 +20,12 @@ modules can help provide the required information:
 ## Example usage
 
 ```hcl-terraform
-module "dev_ocp_certmgr" {
+module "ocp_certmgr" {
+  source = "github.com/cloud-native-toolkit/terraform-gitops-ocp-cert-manager"
 
+  gitops_config = module.gitops.gitops_config
+  git_credentials = module.gitops.git_credentials
+  server_name = module.gitops.server_name
 
 }
 ```
-
