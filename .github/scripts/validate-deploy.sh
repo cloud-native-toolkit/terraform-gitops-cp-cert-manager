@@ -36,6 +36,8 @@ fi
 echo "Printing payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/cert-manager.yaml"
 cat "payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/cert-manager.yaml"
 
+echo "payload/${LAYER}/namespace/${NAMESPACE}/certmgr/job.yaml"
+
 #wait for argocd gitops to deploy
 sleep 2m
 
