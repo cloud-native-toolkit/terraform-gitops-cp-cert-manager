@@ -3,7 +3,8 @@ kind: Job
 metadata:
   generateName: installplan-approver-
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
   labels:
     app.kubernetes.io/name: installplan-approver
 spec:
