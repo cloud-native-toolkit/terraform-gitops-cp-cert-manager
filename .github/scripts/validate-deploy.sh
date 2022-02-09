@@ -4,7 +4,6 @@ GIT_REPO=$(cat git_repo)
 GIT_TOKEN=$(cat git_token)
 
 export KUBECONFIG=$(cat .kubeconfig)
-NAMESPACE=$(cat .namespace)
 
 cat gitops-output.json
 
@@ -13,6 +12,7 @@ BRANCH=$(jq -r '.branch // "main"' gitops-output.json)
 SERVER_NAME=$(jq -r '.server_name // "default"' gitops-output.json)
 LAYER=$(jq -r '.layer_dir // "2-services"' gitops-output.json)
 TYPE=$(jq -r '.type // "base"' gitops-output.json)
+NAMESPACE=$(jq -r '.namespace // "gitops-ocp-cert-manager"' gitops-output.json)
 
 mkdir -p .testrepo
 
