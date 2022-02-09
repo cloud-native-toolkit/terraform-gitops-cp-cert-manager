@@ -57,7 +57,7 @@ else
   sleep 30
 fi
 
-RESOURCES="deployment/cert-manager deployment/cert-manager-caininjector deployment/cert-manager-webhook"
+RESOURCES="deployment/cert-manager deployment/cert-manager-cainjector deployment/cert-manager-webhook"
 for resource in $RESOURCES; do
   count=0
   until kubectl get "${resource}" -n "${NAMESPACE}" || [[ $count -eq 20 ]]; do
