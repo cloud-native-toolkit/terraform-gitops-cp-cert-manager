@@ -4,6 +4,7 @@ locals {
   yaml_dir      = "${path.cwd}/.tmp/${local.name}/chart/${local.name}"
 
   layer = "infrastructure"
+  type = "base"
   application_branch = "main"
   layer_config = var.gitops_config[local.layer]
 }
@@ -31,15 +32,14 @@ resource null_resource setup_gitops {
     yaml_dir = local.yaml_dir
     server_name = var.server_name
     layer = local.layer
-
+    type = local.type
     git_credentials = yamlencode(var.git_credentials)
     gitops_config   = yamlencode(var.gitops_config)
     bin_dir = local.bin_dir
   }
 
-
   provisioner "local-exec" {
-    command = "${self.triggers.bin_dir}/igc gitops-module '${self.triggers.name}' -n '${self.triggers.namespace}' --contentDir '${self.triggers.yaml_dir}' --serverName '${self.triggers.server_name}' -l '${self.triggers.layer}' --debug"
+    command = "${self.triggers.bin_dir}/igc gitops-module '${self.triggers.name}' -n '${self.triggers.namespace}' --contentDir '${self.triggers.yaml_dir}' --serverName '${self.triggers.server_name}' -l '${self.triggers.layer}' --type '${self.triggers.type}'"
 
     environment = {
       GIT_CREDENTIALS = nonsensitive(self.triggers.git_credentials)
@@ -47,5 +47,13 @@ resource null_resource setup_gitops {
     }
   }
 
+  provisioner "local-exec" {
+    when = destroy
+    command = "${self.triggers.bin_dir}/igc gitops-module '${self.triggers.name}' -n '${self.triggers.namespace}' --delete --contentDir '${self.triggers.yaml_dir}' --serverName '${self.triggers.server_name}' -l '${self.triggers.layer}' --type '${self.triggers.type}' --debug"
 
+    environment = {
+      GIT_CREDENTIALS = nonsensitive(self.triggers.git_credentials)
+      GITOPS_CONFIG   = self.triggers.gitops_config
+    }
+  }
 }

@@ -77,5 +77,4 @@ variable "server_name" {
 variable "namespace" {
   type        = string
   description = "where to deploy cert-mgr"
-  default     = "openshift-operators"
 }

@@ -4,13 +4,15 @@ GIT_REPO=$(cat git_repo)
 GIT_TOKEN=$(cat git_token)
 
 export KUBECONFIG=$(cat .kubeconfig)
-NAMESPACE="openshift-operators"
-BRANCH="main"
-SERVER_NAME="default"
-TYPE="base"
-LAYER="1-infrastructure"
+NAMESPACE=$(cat .namespace)
 
-COMPONENT_NAME="certmgr"
+cat gitops-output.json
+
+COMPONENT_NAME=$(jq -r '.name // "my-module"' gitops-output.json)
+BRANCH=$(jq -r '.branch // "main"' gitops-output.json)
+SERVER_NAME=$(jq -r '.server_name // "default"' gitops-output.json)
+LAYER=$(jq -r '.layer_dir // "2-services"' gitops-output.json)
+TYPE=$(jq -r '.type // "base"' gitops-output.json)
 
 mkdir -p .testrepo
 
@@ -39,22 +41,39 @@ cat "payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/kustomization.yam
 echo "payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/patches/webhook-namespace-selector.yaml"
 
 #wait for argocd gitops to deploy
-sleep 2m
 
 count=0
-NAMES=$(kubectl get csv cert-manager.v1.5.4 -n openshift-operators -o=jsonpath={.status..requirementStatus..name})
-
-until [[ "$NAMES" =~ cert-manager.v1.5.4 && "$NAMES" =~ certificaterequests.cert-manager.io  ]] || [[ $count -eq 15 ]]; do
-    count=$((count + 1))
-    sleep 60
-    NAMES=$(kubectl get csv cert-manager.v1.5.4 -n openshift-operators -o=jsonpath={.status..requirementStatus..name})
+until kubectl get namespace "${NAMESPACE}" 1> /dev/null 2> /dev/null || [[ $count -eq 20 ]]; do
+  echo "Waiting for namespace: ${NAMESPACE}"
+  count=$((count + 1))
+  sleep 15
 done
 
-if [[ $count -eq 15 ]]; then
-  echo "Timed out waiting for CertManager to deploy"
+if [[ $count -eq 20 ]]; then
+  echo "Timed out waiting for namespace: ${NAMESPACE}"
   exit 1
+else
+  echo "Found namespace: ${NAMESPACE}. Sleeping for 30 seconds to wait for everything to settle down"
+  sleep 30
 fi
 
+RESOURCES="deployment/cert-manager deployment/cert-manager-caininjector deployment/cert-manager-webhook"
+for resource in $RESOURCES; do
+  count=0
+  until kubectl get "${resource}" -n "${NAMESPACE}" || [[ $count -eq 20 ]]; do
+    echo "Waiting for ${resource} in ${NAMESPACE}"
+    count=$((count + 1))
+    sleep 15
+  done
+
+  if [[ $count -eq 20 ]]; then
+    echo "Timed out waiting for ${resource} in ${NAMESPACE}"
+    kubectl get all -n "${NAMESPACE}"
+    exit 1
+  fi
+
+  kubectl rollout status "${resource}" -n "${NAMESPACE}"
+done
 
 cd ..
 rm -rf .testrepo
