@@ -4,32 +4,18 @@ SCRIPT_DIR=$(cd $(dirname "$0"); pwd -P)
 CHART_DIR=$(cd "${SCRIPT_DIR}/../chart"; pwd -P)
 
 DEST_DIR="$1"
-NAMESP="$2"
+export NAMESPACE="$2"
+
+if [[ -z "${DEST_DIR}" ]] || [[ -z "${NAMESPACE}" ]]; then
+  echo "usage: create-yaml.sh DEST_DIR NAMESPACE"
+fi
 
 mkdir -p "${DEST_DIR}"
 
-
-echo "adding certmgr sub chart..."
-
-#create operator
-cat > "${DEST_DIR}/cert-manager.yaml" << EOL
-apiVersion: operators.coreos.com/v1alpha1
-kind: Subscription
-metadata:
-  name: cert-manager
-  namespace: ${NAMESP}
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  channel: stable
-  installPlanApproval: Manual
-  name: cert-manager
-  source: community-operators
-  sourceNamespace: openshift-marketplace
-  startingCSV: cert-manager.v1.5.4
-
-EOL
-
 echo "adding job to approve chart..."
-$(mv ${CHART_DIR}/cert-job.yaml ${DEST_DIR}/job.yaml)
+cp -R "${CHART_DIR}/"* "${DEST_DIR}"
 
+YQ=$(command -v yq4 || command -v "${BIN_DIR}/yq4")
+
+${YQ} e -i '.namespace = env(NAMESPACE)' "${DEST_DIR}/kustomization.yaml"
+${YQ} e -i '.webhooks[0].namespaceSelector.matchExpressions[0].values[0] = env(NAMESPACE)' "${DEST_DIR}/patches/webhook-namespace-selector.yaml"
