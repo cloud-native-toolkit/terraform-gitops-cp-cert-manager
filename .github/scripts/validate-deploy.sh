@@ -8,7 +8,7 @@ NAMESPACE="openshift-operators"
 BRANCH="main"
 SERVER_NAME="default"
 TYPE="base"
-LAYER="2-services"
+LAYER="1-infrastructure"
 
 COMPONENT_NAME="certmgr"
 
@@ -28,15 +28,15 @@ fi
 echo "Printing argocd/${LAYER}/cluster/${SERVER_NAME}/${TYPE}/${NAMESPACE}-${COMPONENT_NAME}.yaml"
 cat "argocd/${LAYER}/cluster/${SERVER_NAME}/${TYPE}/${NAMESPACE}-${COMPONENT_NAME}.yaml"
 
-if [[ ! -f "payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/cert-manager.yaml" ]]; then
-  echo "Application values not found - payload/2-services/namespace/${NAMESPACE}/${COMPONENT_NAME}/cert-manager.yaml"
+if [[ ! -f "payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/kustomization.yaml" ]]; then
+  echo "Application values not found - payload/2-services/namespace/${NAMESPACE}/${COMPONENT_NAME}/kustomization.yaml"
   exit 1
 fi
 
-echo "Printing payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/cert-manager.yaml"
-cat "payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/cert-manager.yaml"
+echo "Printing payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/kustomization.yaml"
+cat "payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/kustomization.yaml"
 
-echo "payload/${LAYER}/namespace/${NAMESPACE}/certmgr/job.yaml"
+echo "payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/patches/webhook-namespace-selector.yaml"
 
 #wait for argocd gitops to deploy
 sleep 2m
