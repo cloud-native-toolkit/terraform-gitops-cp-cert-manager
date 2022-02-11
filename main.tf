@@ -1,6 +1,6 @@
 locals {
   name          = "certmgr"
-  yaml_dir      = "${path.cwd}/.tmp/${local.name}/chart/${local.name}"
+  yaml_dir      = "${path.module}/chart/base"
 
   layer = "infrastructure"
   type = "base"
@@ -13,7 +13,7 @@ resource gitops_module module {
 
   name        = local.name
   namespace   = local.namespace
-  content_dir = "https://github.com/jetstack/cert-manager/releases/download/v1.2.0/cert-manager.yaml"
+  content_dir = local.yaml_dir
   server_name = var.server_name
   layer       = local.layer
   type        = local.type
