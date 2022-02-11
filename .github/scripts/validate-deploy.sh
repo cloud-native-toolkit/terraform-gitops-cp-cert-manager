@@ -30,13 +30,13 @@ fi
 echo "Printing argocd/${LAYER}/cluster/${SERVER_NAME}/${TYPE}/${NAMESPACE}-${COMPONENT_NAME}.yaml"
 cat "argocd/${LAYER}/cluster/${SERVER_NAME}/${TYPE}/${NAMESPACE}-${COMPONENT_NAME}.yaml"
 
-if [[ ! -f "payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/cert-manager.yaml" ]]; then
-  echo "Application values not found - payload/2-services/namespace/${NAMESPACE}/${COMPONENT_NAME}/cert-manager.yaml"
+if [[ ! -f "payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/content.yaml" ]]; then
+  echo "Application values not found - payload/2-services/namespace/${NAMESPACE}/${COMPONENT_NAME}/content.yaml"
   exit 1
 fi
 
-echo "Printing payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/cert-manager.yaml"
-cat "payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/cert-manager.yaml"
+echo "Printing payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/content.yaml"
+cat "payload/${LAYER}/namespace/${NAMESPACE}/${COMPONENT_NAME}/content.yaml"
 
 #wait for argocd gitops to deploy
 
