@@ -73,8 +73,3 @@ variable "server_name" {
   description = "The name of the server"
   default     = "default"
 }
-
-variable "namespace" {
-  type        = string
-  description = "where to deploy cert-mgr"
-}
